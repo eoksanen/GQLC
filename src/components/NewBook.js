@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { CREATE_BOOK } from '../queries/queries'
 import { useLazyQuery } from '@apollo/client'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_BOOKS_AND_AUTHORS } from '../queries/queries'
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
@@ -9,8 +10,14 @@ const NewBook = (props) => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+  
 
-  const [ createBook ] = useMutation(CREATE_BOOK)
+  const [ createBook ] = useMutation(CREATE_BOOK, {
+    refetchQueries: [ { query: ALL_BOOKS } ],
+    onError: (error) => {
+      props.setError(error.graphQLErrors[0].message)
+    }
+  })
 
   if (!props.show) {
     return null
@@ -19,7 +26,7 @@ const NewBook = (props) => {
   const submit = async (event) => {
     event.preventDefault()
 
-   //createBook({ variables: { title,  author, published, genres} })
+   createBook({ variables: { title,  author, published, genres} })
     
     console.log('add book...', createBook.variables)
 
@@ -57,7 +64,7 @@ const NewBook = (props) => {
           <input
             type='number'
             value={published}
-            onChange={({ target }) => setPublished(target.value)}
+            onChange={({ target }) => setPublished(parseInt(target.value))}
           />
         </div>
         <div>
