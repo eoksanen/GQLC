@@ -50,3 +50,12 @@ mutation createBook($title: String!, $author: String!, $published: Int!, $genres
   }
 }
 `
+
+export const EDIT_BORN = gql`
+  mutation editNumber($name: String!, $phone: String!) {
+    editBorn(name: $name, born: $born)  {
+      name
+      born
+    }
+  }
+`

@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client'
 import { CREATE_BOOK } from '../queries/queries'
 import { useLazyQuery } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, ALL_BOOKS_AND_AUTHORS } from '../queries/queries'
+import Notify from './Notify'
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
@@ -10,14 +11,23 @@ const NewBook = (props) => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+  const [errorMessage, setErrorMessage] = useState(null)
   
 
   const [ createBook ] = useMutation(CREATE_BOOK, {
     refetchQueries: [ { query: ALL_BOOKS } ],
     onError: (error) => {
-      props.setError(error.graphQLErrors[0].message)
+        notify(error.graphQLErrors[0].message)
     }
   })
+
+
+  const notify = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 10000)
+  }
 
   if (!props.show) {
     return null
@@ -44,6 +54,7 @@ const NewBook = (props) => {
 
   return (
     <div>
+    <div> <Notify errorMessage={errorMessage} /></div>
       <form onSubmit={submit}>
         <div>
           title

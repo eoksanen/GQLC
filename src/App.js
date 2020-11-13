@@ -8,7 +8,6 @@ import { useQuery } from '@apollo/client'
 
 const App = () => {
   const [page, setPage] = useState('authors')
-  const [errorMessage, setErrorMessage] = useState(null)
   const allBooksAndAuthors = useQuery(ALL_BOOKS_AND_AUTHORS)
   /* , {
     pollInterval: 10000
@@ -17,12 +16,7 @@ const App = () => {
   //const authors = useQuery(ALL_AUTHORS)
   //const books = useQuery(ALL_BOOKS)
 
-  const notify = (message) => {
-    setErrorMessage(message)
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 10000)
-  }
+
   
   console.log(allBooksAndAuthors)
 
@@ -30,20 +24,10 @@ const App = () => {
     return <div>loading...</div>
   }
 
-  const Notify = ({errorMessage}) => {
-    if ( !errorMessage ) {
-      return null
-    }
-    return (
-      <div style={{color: 'red'}}>
-        {errorMessage}
-      </div>
-    )
-  }
+
 
   return (
     <div>
-       <Notify errorMessage={errorMessage} />
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
@@ -62,7 +46,6 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
-        setError={notify} 
         
       />
 
