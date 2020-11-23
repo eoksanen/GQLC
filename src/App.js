@@ -10,7 +10,7 @@ import { useQuery, useApolloClient  } from '@apollo/client'
 
 const App = () => {
   const [page, setPage] = useState('authors')
-  const [token, setToken] = useState(null)
+  const [token, setToken] = useState(localStorage.getItem('books-user-token') ? localStorage.getItem('books-user-token') : null)
   const [errorMessage, setErrorMessage] = useState(null)
   //const allBooksAndAuthors = useQuery(ALL_BOOKS_AND_AUTHORS)
   const allBooks = useQuery(ALL_BOOKS)
@@ -40,19 +40,6 @@ const App = () => {
   
   console.log(allBooks)
 
-  if (!token) {
-    const errorMessage = "Please login first"
-    return (
-      <div>
-        <Notify errorMessage={errorMessage} />
-        <h2>Login</h2>
-        <LoginForm
-          setToken={setToken}
-          setError={notify}
-        />
-      </div>
-    )
-  }
 
   if (allBooks.loading)  {
     return <div>loading...</div>
@@ -63,10 +50,13 @@ const App = () => {
   return (
     <div>
       <div>
+      <Notify errorMessage={errorMessage} />
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        <button onClick={() => setPage('add')}>add book</button>
-      </div>
+        {token ? <button onClick={() => setPage('add')}>add book</button> 
+        : null }
+        {!token ? <button onClick={() => setPage('login')}>login</button> 
+        : <button onClick={() => logout()}>logout</button>}</div>
 
       <Authors
         show={page === 'authors'}
@@ -80,6 +70,16 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
+        setError={notify}
+        token={token}
+        
+      />
+
+      <LoginForm
+        show={page === 'login'}
+        setError={notify}
+        setToken={setToken}
+        setPage={setPage}
         
       />
 

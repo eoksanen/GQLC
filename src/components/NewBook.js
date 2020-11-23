@@ -11,23 +11,14 @@ const NewBook = (props) => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
-  
 
   const [ createBook ] = useMutation(CREATE_BOOK, {
-    refetchQueries: [ { query: ALL_BOOKS_AND_AUTHORS } ],
+    refetchQueries: [ { query: ALL_BOOKS } ],
     onError: (error) => {
-        notify(error.graphQLErrors[0].message)
+        props.setError(error.graphQLErrors[0] ? error.graphQLErrors[0].message :'something went wrong')
     }
   })
 
-
-  const notify = (message) => {
-    setErrorMessage(message)
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 10000)
-  }
 
   if (!props.show) {
     return null
@@ -39,6 +30,7 @@ const NewBook = (props) => {
    createBook({ variables: { title,  author, published, genres} })
     
     console.log('add book...', createBook.variables)
+    console.log('add book...', title, author, published, genres)
 
     setTitle('')
     setPublished('')
@@ -52,9 +44,13 @@ const NewBook = (props) => {
     setGenre('')
   }
 
+  if(!props.token){
+    return null
+  }
+
   return (
     <div>
-    <div> <Notify errorMessage={errorMessage} /></div>
+          <h2> Add Book </h2>
       <form onSubmit={submit}>
         <div>
           title

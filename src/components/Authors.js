@@ -6,7 +6,8 @@ const Authors = (props) => {
   if (!props.show) {
     return null
   }
-  const authors = props.authors.allAuthors
+  if(!props.authors) {return null}
+  const authors = props.authors ? props.authors.allAuthors : null
   console.log(props)
 
   return (
