@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { useMutation } from '@apollo/client'
-import { LOGIN } from '../queries/queries'
+import { useMutation, useLazyQuery } from '@apollo/client'
+import { LOGIN, ME } from '../queries/queries'
 
-const LoginForm = ({ setError, setToken, show, setPage }) => {
+const LoginForm = ({ setError, setToken, setUser, show, setPage }) => {
+
+  const [getMe, meResult] = useLazyQuery(ME)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -17,17 +19,25 @@ const LoginForm = ({ setError, setToken, show, setPage }) => {
     if ( result.data ) {
       const token = result.data.login.value
       setToken(token)
+      getMe()
+      
       localStorage.setItem('books-user-token', token)
-      setPage('add')
+      setPage('recommendations')
     }
   }, [result.data]) // eslint-disable-line
+
+  useEffect(() => {
+
+      if (meResult.data) {
+        setUser(meResult.data.me)
+      }
+    }, [meResult])
 
   const submit = async (event) => {
     event.preventDefault()
 
     login({ variables: { username, password } })
   }
-  console.log(clientInformation)
   if (!show) {
     return null
   }

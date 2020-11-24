@@ -19,6 +19,20 @@ query {
         born
       }
       published
+      genres
+    }
+}
+`
+
+export const BOOKS_BY_GENRE = gql`
+query findBooksByGenre($genreToSearch: String!) {
+  allBooks(genre: $genreToSearch) {
+      title
+      author {
+        name
+        born
+      }
+      published
     }
 }
 `
@@ -34,6 +48,14 @@ export const ALL_BOOKS_AND_AUTHORS = gql`
       published
     }
 }
+`
+export const ME = gql`
+  query {
+        me {
+            favoriteGenre
+          }
+ }
+
 `
 
 export const LOGIN = gql`
