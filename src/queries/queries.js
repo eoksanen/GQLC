@@ -25,8 +25,8 @@ query {
 `
 
 export const BOOKS_BY_GENRE = gql`
-query findBooksByGenre($genreToSearch: String!) {
-  allBooks(genre: $genreToSearch) {
+query findBooksByGenre($genreToSearch: String, $authorToSearch: String, $byBackUser: Boolean ) {
+  allBooks(author: $authorToSearch, genre: $genreToSearch, byUserFavoriteGenre: $byBackUser ) {
       title
       author {
         name

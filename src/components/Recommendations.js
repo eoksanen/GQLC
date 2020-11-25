@@ -9,6 +9,8 @@ const Recommendations = (props) => {
   const[ user, setUser ] = useState(null)
   const[ books, setBooks ] = useState(null)
   const [getMe, meResult] = useLazyQuery(ME) 
+  const [testMe, testResult] = useLazyQuery(BOOKS_BY_GENRE) 
+
    const mee = useQuery(ME)
    console.log('me in Recommendations ', mee.data)
 
@@ -18,10 +20,23 @@ const Recommendations = (props) => {
         getMe()
     }
 
+    const showTestMe = () => {
+        testMe({ variables: {byBackUser: true}})
+    }
+
+    useEffect(() => {
+      if (testResult.data && props.token) {
+
+        console.log('TEST RESULÖT',testResult.data.allBooks)
+        setBooks(testResult.data.allBooks)
+
+      }
+    }, [testResult])
+
     useEffect(() => {
         if (meResult.data && props.token) {
           setBooks(props.books.allBooks.filter(b => (b.genres.includes(meResult.data.me.favoriteGenre))))
-
+         // setBooks(props.books.allBooks.filter(b => (b.genres.includes('cartoon'))))
           setUser(meResult.data.me.favoriteGenre)
         }
       }, [meResult])
@@ -74,7 +89,8 @@ const Recommendations = (props) => {
           )}
         </tbody>
       </table>
-      <button onClick={() => showMe()}>kokeile painaa</button>
+      <button onClick={() => showMe()}>genres locally</button>
+      <button onClick={() => showTestMe()}>query genres</button>
     </div>
   )
 }

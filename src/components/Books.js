@@ -12,7 +12,6 @@ const Books = (props) => {
   const [genres, setGenres ] = useState(null) 
 
   const showBooksByGenre = (genre) => {
-    console.log('type ', typeof(g), ' ', genre)
     getBooksByGenre({ variables: {genreToSearch: genre}})
   }
   const showall = () => {
