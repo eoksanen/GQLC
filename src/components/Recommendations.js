@@ -5,20 +5,36 @@ import { useQuery, useApolloClient  } from '@apollo/client'
 
 
 const Recommendations = (props) => {
+  const [favoriteGenre, setFavoriteGenre ] = useState(null)
+  const[ user, setUser ] = useState(null)
+  const[ books, setBooks ] = useState(null)
+  const [getMe, meResult] = useLazyQuery(ME) 
+   const mee = useQuery(ME)
+   console.log('me in Recommendations ', mee.data)
 
-    const [getMe, meResult] = useLazyQuery(ME) 
+
 
     const showMe = () => {
         getMe()
     }
-    console.log('test  ti ', props.user)
-    const bks = props.books.allBooks.filter(b => (b.genres.includes('refactoring')))
+
     useEffect(() => {
-        console.log('second useEffect')
-        if (meResult.data) {
-          console.log('ME ', meResult.data)
+        if (meResult.data && props.token) {
+          setBooks(props.books.allBooks.filter(b => (b.genres.includes(meResult.data.me.favoriteGenre))))
+
+          setUser(meResult.data.me.favoriteGenre)
         }
       }, [meResult])
+
+
+      useEffect(() => {
+        if (mee.data && props.token) {
+          setBooks(props.books.allBooks.filter(b => (b.genres.includes(mee.data.me.favoriteGenre))))
+
+          setUser(mee.data.me.favoriteGenre)
+        }
+
+      },[mee.data])
 
   if (!props.show) {
     return null
@@ -29,14 +45,14 @@ const Recommendations = (props) => {
   }
 
   
-  console.log('props ',props)
+  console.log('props ', user)
 
 
   return (
     <div>
       <h2>recommendations</h2>
 
-  <p>books in your favorite genre {props.fg}</p>
+  <p>books in your favorite genre {user}</p>
 
       <table>
         <tbody>
@@ -49,7 +65,7 @@ const Recommendations = (props) => {
               published
             </th>
           </tr>
-          {bks.map( a => 
+          {books.map( a => 
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>

@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { useMutation, useLazyQuery } from '@apollo/client'
+import { useMutation, useLazyQuery, useQuery } from '@apollo/client'
 import { LOGIN, ME } from '../queries/queries'
 
 const LoginForm = ({ setError, setToken, setUser, show, setPage }) => {
 
   const [getMe, meResult] = useLazyQuery(ME)
 
+  const mee = useQuery(ME)
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  console.log('me in LoginForm ', mee.data)
+
   const [ login, result ] = useMutation(LOGIN, {
+    //refetchQueries: [{query: ME}],
     onError: (error) => {
       setError(error.graphQLErrors[0].message)
     }
@@ -19,17 +24,20 @@ const LoginForm = ({ setError, setToken, setUser, show, setPage }) => {
     if ( result.data ) {
       const token = result.data.login.value
       setToken(token)
-      getMe()
+      window.location.reload(true)
+      console.log('MEEEEE ', getMe() )
+      
       
       localStorage.setItem('books-user-token', token)
-      setPage('recommendations')
+      // setPage('recommendations')
+      
     }
   }, [result.data]) // eslint-disable-line
 
   useEffect(() => {
 
       if (meResult.data) {
-        setUser(meResult.data.me)
+        setUser(meResult.data)
       }
     }, [meResult])
 
