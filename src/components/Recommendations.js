@@ -36,7 +36,7 @@ const Recommendations = (props) => {
       console.log('genres locally, me data from server useEffect')
         if (meResult.data && props.token) {
           setBooks(props.books.allBooks.filter(b => (b.genres.includes(meResult.data.me.favoriteGenre))))
-         // setBooks(props.books.allBooks.filter(b => (b.genres.includes('cartoon'))))
+          console.log('TEST RESULT', props.books.allBooks.filter(b => (b.genres.includes(meResult.data.me.favoriteGenre))))
         }
       }, [meResult])
 
@@ -45,7 +45,7 @@ const Recommendations = (props) => {
         console.log('useQuery useEffect')
         if (mee.data && props.token) {
           setBooks(props.books.allBooks.filter(b => (b.genres.includes(mee.data.me.favoriteGenre))))
-          setUser(mee.data)
+          setUser(mee.data.me)
         }
 
       },[mee.data])
@@ -59,14 +59,14 @@ const Recommendations = (props) => {
   }
 
   
-  console.log('props ', user)
+  //console.log('props ', user)
 
 
   return (
     <div>
       <h2>recommendations</h2>
 
-  <p>books in your favorite genre {user}</p>
+  <p>books in your favorite genre {user.favoriteGenre}</p>
 
       <table>
         <tbody>
