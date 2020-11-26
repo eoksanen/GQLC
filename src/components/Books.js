@@ -18,7 +18,7 @@ const Books = (props) => {
     all()
   }
 useEffect(() => {
-  console.log('first useEffect')
+  console.log(' useEffect')
   setBooksByGenre(props.books.allBooks)
   const genres = []
   props.books.allBooks.map(book => book.genres.map(genre => {
@@ -30,14 +30,12 @@ useEffect(() => {
 }, [])
 
   useEffect(() => {
-    console.log('second useEffect')
     if (result.data) {
       setBooksByGenre(result.data.allBooks)
     }
   }, [result])
 
   useEffect(() => {
-    console.log('second useEffect')
     if (allresult.data) {
       setBooksByGenre(allresult.data.allBooks)
     }

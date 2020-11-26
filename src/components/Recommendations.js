@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import {useLazyQuery} from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, ALL_BOOKS_AND_AUTHORS, BOOKS_BY_GENRE, ME } from '../queries/queries'
-import { useQuery, useApolloClient  } from '@apollo/client'
+import { useQuery, useLazyQuery  } from '@apollo/client'
 
 
 const Recommendations = (props) => {
@@ -15,7 +14,6 @@ const Recommendations = (props) => {
    console.log('me in Recommendations ', mee.data)
 
 
-
     const showMe = () => {
         getMe()
     }
@@ -25,28 +23,29 @@ const Recommendations = (props) => {
     }
 
     useEffect(() => {
+      console.log('query favorite genres from server by usercontext useEffect')
       if (testResult.data && props.token) {
 
-        console.log('TEST RESULÖT',testResult.data.allBooks)
+        console.log('TEST RESULT',testResult.data.allBooks)
         setBooks(testResult.data.allBooks)
 
       }
     }, [testResult])
 
     useEffect(() => {
+      console.log('genres locally, me data from server useEffect')
         if (meResult.data && props.token) {
           setBooks(props.books.allBooks.filter(b => (b.genres.includes(meResult.data.me.favoriteGenre))))
          // setBooks(props.books.allBooks.filter(b => (b.genres.includes('cartoon'))))
-          setUser(meResult.data.me.favoriteGenre)
         }
       }, [meResult])
 
 
       useEffect(() => {
+        console.log('useQuery useEffect')
         if (mee.data && props.token) {
           setBooks(props.books.allBooks.filter(b => (b.genres.includes(mee.data.me.favoriteGenre))))
-
-          setUser(mee.data.me.favoriteGenre)
+          setUser(mee.data)
         }
 
       },[mee.data])
@@ -89,8 +88,9 @@ const Recommendations = (props) => {
           )}
         </tbody>
       </table>
-      <button onClick={() => showMe()}>genres locally</button>
-      <button onClick={() => showTestMe()}>query genres</button>
+      <button onClick={() => showMe()}>genres locally by me data from server</button>
+      <button onClick={() => showTestMe()}>genres from server by userContext</button>
+      <button onClick={() => setBooks(props.books.allBooks.filter(b => (b.genres.includes('cartoon'))))}>genres by cartoon</button>
     </div>
   )
 }
