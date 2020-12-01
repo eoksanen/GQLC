@@ -21,6 +21,19 @@ const App = () => {
   //const me = useQuery(ME)
   const client = useApolloClient()
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => 
+      set.map(p => p.id).includes(object.id)  
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+      })
+    }   
+  }
+
   const logout = () => {
     setToken(null)
     localStorage.clear()
@@ -42,23 +55,12 @@ const App = () => {
   
   console.log(allBooks)
 
-  const updateCacheWith = (addedBook) => {
-    const includedIn = (set, object) => 
-      set.map(p => p.id).includes(object.id)  
-
-    const dataInStore = client.readQuery({ query: ALL_BOOKS })
-    if (!includedIn(dataInStore.allPersons, addedBook)) {
-      client.writeQuery({
-        query: ALL_BOOKS,
-        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
-      })
-    }   
-  }
   
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       const addedBook = subscriptionData.data.bookAdded
-      notify(`${addedBook.name} added`)
+      console.log(addedBook.title, 'added')
+      notify(`${addedBook.title} added`)
       updateCacheWith(addedBook)
     }
   })

@@ -8,7 +8,7 @@ import React from 'react'
     }
     return (
       <div style={{color: 'red'}}>
-        {errorMessage}
+        {console.log(errorMessage), errorMessage}
       </div>
     )
   }
