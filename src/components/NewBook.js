@@ -18,7 +18,7 @@ const NewBook = (props) => {
         props.setError(error.graphQLErrors[0] ? error.graphQLErrors[0].message :'something went wrong')
     },
     update: (store, response) => {
-      props.updateCacheWith(response.data.addPerson)
+      props.updateCacheWith(response.data.addBook)
     }
   })
 

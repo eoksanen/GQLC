@@ -24,7 +24,7 @@ const LoginForm = ({ setError, setToken, setUser, show, setPage }) => {
     if ( result.data ) {
       const token = result.data.login.value
       setToken(token)
-      window.location.reload(true)
+     // window.location.reload(true)
       console.log('MEEEEE ', getMe() )
       
       
