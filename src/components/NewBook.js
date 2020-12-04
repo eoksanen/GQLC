@@ -17,9 +17,21 @@ const NewBook = (props) => {
     onError: (error) => {
         props.setError(error.graphQLErrors[0] ? error.graphQLErrors[0].message :'something went wrong')
     },
+    
     update: (store, response) => {
       props.updateCacheWith(response.data.addBook)
-    }
+    },
+    /*
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_BOOKS })
+      store.writeQuery({
+        query: ALL_BOOKS,
+        data: {
+          ...dataInStore,
+          allBooks: [ ...dataInStore.allBooks, response.data.addBook ]
+        }
+      })
+    }*/
   })
 
 

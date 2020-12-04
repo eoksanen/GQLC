@@ -28,11 +28,6 @@ const wsLink = new WebSocketLink({
   }
 })
 
-/*
-const httpLink = createHttpLink({
-  uri: 'http://localhost:4000',
-})
-*/
 const splitLink = split(
   ({ query }) => {
     const definition = getMainDefinition(query)
